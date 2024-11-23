@@ -40,10 +40,9 @@ public class Main {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new BankView().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            BankView bankView = BankConfiguration.createBankView();
+            bankView.setVisible(true);
         });
     }
     
