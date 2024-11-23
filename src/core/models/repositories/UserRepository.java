@@ -4,8 +4,10 @@
  */
 package core.models.repositories;
 
+import core.models.interfaces.IUserRepository;
 import core.models.User;
-import core.models.storage.Storage;
+import core.models.interfaces.IStorage;
+import java.util.List;
 
 /**
  *
@@ -13,10 +15,23 @@ import core.models.storage.Storage;
  */
 public class UserRepository implements IUserRepository {
 
+    private final IStorage storage;
+
+    /**
+     * Repository instance for handling storage
+     * @param storage storage instance
+     */
+    public UserRepository(IStorage storage) {
+        this.storage = storage;
+    }
+
     @Override
-    public boolean addUser(User user) {
-        Storage storage = Storage.getInstance();
-        
-        return storage.addUser(user);
+    public void addUser(User user) {
+        this.storage.addUser(user);
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return this.storage.getUsers();
     }
 }

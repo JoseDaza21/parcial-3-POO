@@ -5,37 +5,39 @@
 package core.models.storage;
 
 import core.models.User;
+import core.models.interfaces.IStorage;
+import core.models.interfaces.IStorageValidator;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author jose
  */
-public class Storage {
-    // Instancia Singleton
-    private static Storage instance;
-    
-    private ArrayList<User> users;
-    
-    private Storage() {
+public class Storage implements IStorage {
+
+    private final List<User> users;
+    private final IStorageValidator storageValidator;
+
+    /**
+     * Instance the storage
+     * @param storageValidator validator used for data
+     */
+    public Storage(IStorageValidator storageValidator) {
         this.users = new ArrayList<>();
+
+        this.storageValidator = storageValidator;
     }
-    
-    public static Storage getInstance() {
-        if (instance == null) {
-            instance = new Storage();
-        }
-        return instance;
+
+    @Override
+    public List<User> getUsers() {
+        return new ArrayList<>(this.users); // returns a copy
     }
-    
-    public boolean addUser(User user) {
-        for (User u : this.users) {
-            if (u.getId() == user.getId()) {
-                return false;
-            }
-        }
-        
+
+    @Override
+    public void addUser(User user) {
+        this.storageValidator.uniqueUserID(user.getId(), this);
+
         this.users.add(user);
-        return true;
     }
 }

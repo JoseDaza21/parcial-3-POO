@@ -4,10 +4,14 @@
  */
 package main;
 
-import core.controllers.IUserController;
+import core.controllers.interfaces.IUserController;
 import core.controllers.UserController;
-import core.models.repositories.IUserRepository;
+import core.models.interfaces.IStorage;
+import core.models.interfaces.IStorageValidator;
+import core.models.interfaces.IUserRepository;
 import core.models.repositories.UserRepository;
+import core.models.storage.Storage;
+import core.models.storage.StorageValidator;
 import core.views.BankView;
 
 /**
@@ -15,9 +19,17 @@ import core.views.BankView;
  * @author jose
  */
 public class BankConfiguration {
+
+    /**
+     * create the Bank View with controllers, repositories, storage and needed dependencies
+     * @return BankView instance
+     */
     public static BankView createBankView() {
         // Crear las dependencias
-        IUserRepository userRepository = new UserRepository();
+        IStorageValidator storageValidator = new StorageValidator();
+        IStorage storage = new Storage(storageValidator);
+        
+        IUserRepository userRepository = new UserRepository(storage);
         IUserController userController = new UserController(userRepository);
         
         // Crear y retornar la vista con sus dependencias

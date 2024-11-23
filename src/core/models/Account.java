@@ -10,8 +10,8 @@ package core.models;
  */
 public class Account {
     
-    private String id;
-    private User owner;
+    private final String id;
+    private final User owner;
     private double balance;
 
     public Account(String id, User owner) {

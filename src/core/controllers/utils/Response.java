@@ -10,29 +10,52 @@ package core.controllers.utils;
  */
 public class Response {
     
-    private String message;
-    private int status;
+    private final String message;
+    private final int status;
     private Object object;
 
+    /**
+     * Instances a layout for user messages
+     * @param message message showed to the user
+     * @param status message status
+     */
     public Response(String message, int status) {
         this.message = message;
         this.status = status;
     }
     
+    /**
+     * Instances a layout for user messages
+     * @param message message showed to the user
+     * @param status message status
+     * @param object object sent into the message
+     */
     public Response(String message, int status, Object object) {
         this.message = message;
         this.status = status;
         this.object = object;
     }
 
+    /**
+     * Getter for message property
+     * @return message string
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Getter for status property
+     * @return status number
+     */
     public int getStatus() {
         return status;
     }
 
+    /**
+     * Getter for object property
+     * @return object instance
+     */
     public Object getObject() {
         return object;
     }

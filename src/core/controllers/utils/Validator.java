@@ -22,10 +22,12 @@ public class Validator {
         return number >= beginning && number <= end;
     }
 
+    // check if a string is empty
     private static boolean isEmpty(String s) {
         return s.equals("");
     }
 
+    // validate the required input in order to create a new user
     public static User validateUserInput(String id, String firstname, String lastname, String age) {
         int id_int, age_int;
 

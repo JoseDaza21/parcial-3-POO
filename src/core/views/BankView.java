@@ -9,11 +9,12 @@ import core.models.Transaction;
 import core.models.utils.TransactionType;
 import core.models.User;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Collections;
 import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
-import core.controllers.IUserController;
+import core.controllers.interfaces.IUserController;
 import core.controllers.utils.Response;
 
 /**
@@ -22,20 +23,22 @@ import core.controllers.utils.Response;
  */
 public class BankView extends javax.swing.JFrame {
 
-    private ArrayList<Account> accounts;
-    private ArrayList<Transaction> transactions;
-    private ArrayList<User> users;
-    private IUserController userController;
+    //TODO: delete these lists
+    private final List<Account> accounts;
+    private final List<Transaction> transactions;
+    private final List<User> users;
+    private final IUserController userController;
 
     /**
      * Creates new form BankFrame
+     * @param userController controller for user actions
      */
     public BankView(IUserController userController) {
         initComponents();
         this.accounts = new ArrayList<>();
         this.transactions = new ArrayList<>();
         this.users = new ArrayList<>();
-        
+
         // controllers
         this.userController = userController;
     }
