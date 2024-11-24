@@ -13,5 +13,14 @@ import core.models.interfaces.ITransactionGetters;
  */
 public interface ITransactionController extends ITransactionGetters {
 
+    /**
+     * Creates a transaction
+     *
+     * @param type type
+     * @param source_account source account
+     * @param destination_account destination account
+     * @param amount amount of money
+     * @return response for the view
+     */
     Response createTransaction(String type, String source_account, String destination_account, String amount);
 }

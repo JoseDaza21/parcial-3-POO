@@ -13,11 +13,31 @@ import core.models.utils.TransactionType;
  */
 public interface ITransaction {
 
+    /**
+     * Getter for the transaction type
+     *
+     * @return transaction type
+     */
     TransactionType getType();
 
+    /**
+     * Getter for the source account
+     *
+     * @return source account
+     */
     Account getSourceAccount();
 
+    /**
+     * Getter for the destination account
+     *
+     * @return destination account
+     */
     Account getDestinationAccount();
 
+    /**
+     * Getter for the transaction amount
+     *
+     * @return transaction amount
+     */
     double getAmount();
 }

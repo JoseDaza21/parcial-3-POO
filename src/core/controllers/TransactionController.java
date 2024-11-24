@@ -82,7 +82,7 @@ public class TransactionController implements ITransactionController {
                 return new Response(e.getMessage(), Status.BAD_REQUEST);
             }
 
-            return new Response("Account created succesfully", Status.CREATED);
+            return new Response("Transaction created succesfully", Status.CREATED);
         } catch (Exception e) {
             return new Response("Unexpected error", Status.INTERNAL_SERVER_ERROR);
         }

@@ -12,12 +12,19 @@ import java.util.List;
  * @author jose
  */
 public interface IUserGetters {
-    
+
     /**
      * Getter for the users list property
+     *
      * @return users list
      */
     List<User> getUsers();
-    
+
+    /**
+     * Get a single user
+     *
+     * @param user_id user id
+     * @return user object
+     */
     User getUser(int user_id);
 }
