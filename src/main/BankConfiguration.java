@@ -5,14 +5,18 @@
 package main;
 
 import core.controllers.AccountController;
+import core.controllers.TransactionController;
 import core.controllers.interfaces.IUserController;
 import core.controllers.UserController;
 import core.controllers.interfaces.IAccountController;
+import core.controllers.interfaces.ITransactionController;
 import core.models.interfaces.IAccountRepository;
 import core.models.interfaces.IStorage;
 import core.models.interfaces.IStorageValidator;
+import core.models.interfaces.ITransactionRepository;
 import core.models.interfaces.IUserRepository;
 import core.models.repositories.AccountRepository;
+import core.models.repositories.TransactionRepository;
 import core.models.repositories.UserRepository;
 import core.models.storage.Storage;
 import core.models.storage.StorageValidator;
@@ -41,7 +45,10 @@ public class BankConfiguration {
         IAccountRepository accountRepository = new AccountRepository(storage);
         IAccountController accountController = new AccountController(accountRepository, userRepository);
 
+        ITransactionRepository transactionRepository = new TransactionRepository(storage);
+        ITransactionController transactionController = new TransactionController(transactionRepository, accountRepository);
+
         // Crear y retornar la vista con sus dependencias
-        return new BankView(userController, accountController);
+        return new BankView(userController, accountController, transactionController);
     }
 }

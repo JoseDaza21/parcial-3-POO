@@ -18,4 +18,6 @@ public interface IAccountRepository extends IAccountGetters {
      * @param account account information
      */
     void addAccount(Account account);
+
+    void editBalance(Account transaction, double value);
 }

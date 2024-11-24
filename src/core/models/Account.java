@@ -61,4 +61,9 @@ public class Account implements IAccount {
         return true;
     }
 
+    @Override
+    public void setBalance(double value) {
+        this.balance = value;
+    }
+
 }

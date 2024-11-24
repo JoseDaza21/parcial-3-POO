@@ -25,8 +25,6 @@ import core.controllers.utils.Response;
 public class BankView extends javax.swing.JFrame {
 
     //TODO: delete these lists
-    private final List<Account> accounts;
-    private final List<Transaction> transactions;
     private final IUserController userController;
     private final IAccountController accountController;
     private final ITransactionController transactionController;
@@ -39,8 +37,6 @@ public class BankView extends javax.swing.JFrame {
      */
     public BankView(IUserController userController, IAccountController accountController, ITransactionController transactionController) {
         initComponents();
-        this.accounts = new ArrayList<>();
-        this.transactions = new ArrayList<>();
 
         // controllers
         this.userController = userController;
@@ -588,88 +584,21 @@ public class BankView extends javax.swing.JFrame {
         String source_account_id = SourceAccountTextField.getText();
         String destination_account_id = DestinationAccountTextField.getText();
         String amount = AmountTextField.getText();
-        
-        this.transactionController.createTransaction(type, source_account_id, destination_account_id, amount);
-        
-        try {
-            //String type = TypeComboBox.getItemAt(TypeComboBox.getSelectedIndex());
-            switch (type) {
-                case "Deposit": {
-                    
 
-                    Account destinationAccount = null;
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(destinationAccountId)) {
-                            destinationAccount = account;
-                        }
-                    }
-                    if (destinationAccount != null) {
-                        destinationAccount.deposit(amount);
+        Response response = this.transactionController.createTransaction(type, source_account_id, destination_account_id, amount);
 
-                        this.transactions.add(new Transaction(TransactionType.DEPOSIT, null, destinationAccount, amount));
+        // Show message according to the response
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
 
-                        SourceAccountTextField.setText("");
-                        DestinationAccountTextField.setText("");
-                        AmountTextField.setText("");
-                    }
-                    break;
-                }
-                case "Withdraw": {
-                    
-                    double amount = Double.parseDouble(AmountTextField.getText());
-
-                    Account sourceAccount = null;
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(sourceAccountId)) {
-                            sourceAccount = account;
-                        }
-                    }
-                    if (sourceAccount != null && sourceAccount.withdraw(amount)) {
-                        this.transactions.add(new Transaction(TransactionType.WITHDRAW, sourceAccount, null, amount));
-
-                        SourceAccountTextField.setText("");
-                        DestinationAccountTextField.setText("");
-                        AmountTextField.setText("");
-                    }
-                    break;
-                }
-                case "Transfer": {
-                    String sourceAccountId = SourceAccountTextField.getText();
-                    String destinationAccountId = DestinationAccountTextField.getText();
-                    double amount = Double.parseDouble(AmountTextField.getText());
-
-                    Account sourceAccount = null;
-                    Account destinationAccount = null;
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(sourceAccountId)) {
-                            sourceAccount = account;
-                        }
-                    }
-                    for (Account account : this.accounts) {
-                        if (account.getId().equals(destinationAccountId)) {
-                            destinationAccount = account;
-                        }
-                    }
-                    if (sourceAccount != null && destinationAccount != null && sourceAccount.withdraw(amount)) {
-                        destinationAccount.deposit(amount);
-
-                        this.transactions.add(new Transaction(TransactionType.TRANSFER, sourceAccount, destinationAccount, amount));
-
-                        SourceAccountTextField.setText("");
-                        DestinationAccountTextField.setText("");
-                        AmountTextField.setText("");
-                    }
-                    break;
-                }
-                default: {
-                    SourceAccountTextField.setText("");
-                    DestinationAccountTextField.setText("");
-                    AmountTextField.setText("");
-                    break;
-                }
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+            // emtpy fields
+            SourceAccountTextField.setText("");
+            DestinationAccountTextField.setText("");
+            AmountTextField.setText("");
         }
     }//GEN-LAST:event_ExecuteTransactionButtonActionPerformed
 
@@ -678,7 +607,7 @@ public class BankView extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) UsersTable.getModel();
         model.setRowCount(0);
 
-        List<User> users = userController.getUsers();
+        List<User> users = this.userController.getUsers();
         users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
 
         for (User user : users) {
@@ -691,7 +620,7 @@ public class BankView extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) AccountsTable.getModel();
         model.setRowCount(0);
 
-        List<Account> accounts = accountController.getAccounts();
+        List<Account> accounts = this.accountController.getAccounts();
         accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
 
         for (Account account : accounts) {
@@ -704,10 +633,10 @@ public class BankView extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) TransactionsTable.getModel();
         model.setRowCount(0);
 
-        ArrayList<Transaction> transactionsCopy = (ArrayList<Transaction>) this.transactions.clone();
-        Collections.reverse(transactionsCopy);
+        List<Transaction> transactions = transactionController.getTransactions();
+        Collections.reverse(transactions);
 
-        for (Transaction transaction : transactionsCopy) {
+        for (Transaction transaction : transactions) {
             model.addRow(new Object[]{transaction.getType().name(), (transaction.getSourceAccount() != null ? transaction.getSourceAccount().getId() : "None"), (transaction.getDestinationAccount() != null ? transaction.getDestinationAccount().getId() : "None"), transaction.getAmount()});
         }
     }//GEN-LAST:event_RefreshTransactionsButtonActionPerformed

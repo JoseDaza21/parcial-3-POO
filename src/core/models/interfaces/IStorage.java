@@ -35,4 +35,6 @@ public interface IStorage extends IUserGetters, IAccountGetters, ITransactionGet
      * @param transaction transaction to be added
      */
     void addTransaction(Transaction transaction);
+
+    void editBalance(Account account, double value);
 }

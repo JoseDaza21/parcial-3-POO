@@ -5,7 +5,9 @@
 package core.controllers.utils;
 
 import core.models.Account;
+import core.models.Transaction;
 import core.models.User;
+import core.models.utils.TransactionType;
 import java.util.Random;
 
 /**
@@ -103,11 +105,11 @@ public class Validator {
 
     public static AccountInput validateAccountInput(String user_id, String initial_balance) {
         int id_int = Validator.validateUserID(user_id);
-        double initial_balance_int;
+        double initial_balance_double;
 
         try {
-            initial_balance_int = Double.parseDouble(initial_balance);
-            if (!Validator.fitsRange(initial_balance_int, 0)) {
+            initial_balance_double = Double.parseDouble(initial_balance);
+            if (!Validator.fitsRange(initial_balance_double, 0)) {
                 throw new IllegalArgumentException("Initial balance must be 0 or more");
             }
 
@@ -115,6 +117,48 @@ public class Validator {
             throw new IllegalArgumentException("Initial balance must be float");
         }
 
-        return new AccountInput(id_int, initial_balance_int);
+        return new AccountInput(id_int, initial_balance_double);
+    }
+
+    private static boolean validateAccountFormat(String account_id) {
+        String regex = "\\d{3}-\\d{6}-\\d{2}";
+
+        return account_id.matches(regex);
+    }
+
+    public static TransactionInput validateTransactionInput(String type, String source_account, String destination_account, String amount) {
+        TransactionType transaction_type = TransactionType.DEPOSIT;
+        double amount_double;
+
+        switch (type) {
+            case "Deposit" ->
+                transaction_type = TransactionType.DEPOSIT;
+
+            case "Withdraw" ->
+                transaction_type = TransactionType.WITHDRAW;
+
+            case "Transfer" ->
+                transaction_type = TransactionType.TRANSFER;
+        }
+
+        if ((transaction_type == TransactionType.WITHDRAW || transaction_type == TransactionType.TRANSFER) && !Validator.validateAccountFormat(source_account)) {
+            throw new IllegalArgumentException("Source account has an invalid format. Accounts format must be XXX-XXXXXX-XX");
+        }
+
+        if ((transaction_type == TransactionType.DEPOSIT || transaction_type == TransactionType.TRANSFER) && !Validator.validateAccountFormat(destination_account)) {
+            throw new IllegalArgumentException("Destination account has an invalid format. Accounts format must be XXX-XXXXXX-XX");
+        }
+
+        try {
+            amount_double = Double.parseDouble(amount);
+            if (!Validator.fitsRange(amount_double, 0)) {
+                throw new IllegalArgumentException("Amount must be 0 or more");
+            }
+
+        } catch (NumberFormatException ex) {
+            throw new IllegalArgumentException("Amount balance must be float");
+        }
+
+        return new TransactionInput(transaction_type, source_account, destination_account, amount_double);
     }
 }

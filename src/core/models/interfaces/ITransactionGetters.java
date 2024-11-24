@@ -12,8 +12,10 @@ import java.util.List;
  * @author jose
  */
 public interface ITransactionGetters {
-     /**
-     * Getter for the users list property
+
+    /**
+     * Getter for the transactions list property
+     *
      * @return users list
      */
     List<Transaction> getTransactions();

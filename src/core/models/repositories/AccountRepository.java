@@ -32,6 +32,11 @@ public class AccountRepository implements IAccountRepository {
     }
 
     @Override
+    public void editBalance(Account account, double value) {
+        this.storage.editBalance(account, value);
+    }
+
+    @Override
     public List<Account> getAccounts() {
         return this.storage.getAccounts();
     }

@@ -4,9 +4,9 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/home/jose/Desktop/bank-app-poo/src/core/controllers/TransactionController.java</file>
-            <file>file:/home/jose/Desktop/bank-app-poo/src/core/models/Transaction.java</file>
-            <file>file:/home/jose/Desktop/bank-app-poo/src/core/controllers/AccountController.java</file>
+            <file>file:/home/jose/Desktop/bank-app-poo/src/core/models/interfaces/IAccountRepository.java</file>
             <file>file:/home/jose/Desktop/bank-app-poo/src/core/views/BankView.java</file>
+            <file>file:/home/jose/Desktop/bank-app-poo/src/core/models/repositories/AccountRepository.java</file>
         </group>
     </open-files>
 </project-private>

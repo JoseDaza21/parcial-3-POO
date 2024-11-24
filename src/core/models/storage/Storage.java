@@ -79,7 +79,6 @@ public class Storage implements IStorage {
 
     @Override
     public void addAccount(Account account) {
-        //TODO: VALIDAR ESTO CON getAccount();
         this.storageValidator.uniqueID(account.getId(), this);
 
         this.accounts.add(account);
@@ -93,6 +92,11 @@ public class Storage implements IStorage {
     @Override
     public void addTransaction(Transaction transaction) {
         this.transactions.add(transaction);
+    }
+
+    @Override
+    public void editBalance(Account account, double value) {
+        account.setBalance(value);
     }
 
 }

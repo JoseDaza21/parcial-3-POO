@@ -6,7 +6,11 @@ package core.controllers;
 
 import core.controllers.interfaces.ITransactionController;
 import core.controllers.interfaces.Status;
+import core.controllers.utils.ElementNotFoundException;
 import core.controllers.utils.Response;
+import core.controllers.utils.TransactionInput;
+import core.controllers.utils.Validator;
+import core.models.Account;
 import core.models.Transaction;
 import core.models.interfaces.IAccountRepository;
 import core.models.interfaces.ITransactionRepository;
@@ -40,18 +44,42 @@ public class TransactionController implements ITransactionController {
 
     @Override
     public Response createTransaction(String type, String source_account, String destination_account, String amount) {
+        Account source = null;
+        Account destination = null;
+
         try {
             try {
-                AccountInput input = Validator.validateAccountInput(user_id, initial_balance);
+                TransactionInput input = Validator.validateTransactionInput(type, source_account, destination_account, amount);
 
-                User user = this.userRepository.getUser(input.user_id);
-                Account account = new Account(Validator.generateRandomID(), user, input.initial_balance);
+                if (input.type == TransactionType.WITHDRAW || input.type == TransactionType.TRANSFER) {
+                    try {
+                        source = accountRepository.getAccount(source_account);
+                    } catch (ElementNotFoundException e) {
+                        return new Response("Source account doest not exist", Status.NOT_FOUND);
+                    }
 
-                this.accountRepository.addAccount(account);
+                    if (input.amount > source.getBalance()) {
+                        throw new IllegalArgumentException("Insufficient funds in the source account");
+                    }
+
+                    this.accountRepository.editBalance(source, source.getBalance() - input.amount);
+                }
+
+                if (input.type == TransactionType.DEPOSIT || input.type == TransactionType.TRANSFER) {
+                    try {
+                        destination = accountRepository.getAccount(destination_account);
+
+                        this.accountRepository.editBalance(destination, destination.getBalance() + input.amount);
+                    } catch (ElementNotFoundException e) {
+                        return new Response("Destination account doest not exist", Status.NOT_FOUND);
+                    }
+                }
+
+                Transaction transaction = new Transaction(input.type, source, destination, input.amount);
+
+                this.transactionRepository.addTransaction(transaction);
             } catch (IllegalArgumentException e) {
                 return new Response(e.getMessage(), Status.BAD_REQUEST);
-            } catch (ElementNotFoundException e) {
-                return new Response(e.getMessage(), Status.NOT_FOUND);
             }
 
             return new Response("Account created succesfully", Status.CREATED);
