@@ -5,13 +5,13 @@
 package core.controllers.interfaces;
 
 import core.controllers.utils.Response;
-import core.models.interfaces.IGetters;
+import core.models.interfaces.IUserGetters;
 
 /**
  *
  * @author jose
  */
-public interface IUserController extends IGetters {
+public interface IUserController extends IUserGetters {
 
     /**
      * Create a new user

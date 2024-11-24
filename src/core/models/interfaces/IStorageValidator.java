@@ -13,9 +13,16 @@ import core.models.storage.Storage;
 public interface IStorageValidator {
 
     /**
-     * Check if an ID is not used yet
+     * Check if a user ID is not used yet
      * @param id user id
      * @param storage storage instance
      */
-    public void uniqueUserID(int id, Storage storage);
+    public void uniqueID(int id, Storage storage);
+    
+    /**
+     * Check if an account ID is not used yet
+     * @param id account id
+     * @param storage storage instance
+     */
+    public void uniqueID(String id, Storage storage);
 }

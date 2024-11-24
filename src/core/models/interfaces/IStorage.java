@@ -4,18 +4,35 @@
  */
 package core.models.interfaces;
 
+import core.models.Account;
+import core.models.Transaction;
 import core.models.User;
-import java.util.ArrayList;
 
 /**
  *
  * @author jose
  */
-public interface IStorage extends IGetters {
-     /**
+public interface IStorage extends IUserGetters, IAccountGetters, ITransactionGetters {
+
+    /**
      * Adds a new user to the internal storage
+     *
      * @param user user to be added
      * @throws IllegalArgumentException if ID already exists
      */
     void addUser(User user);
+
+    /**
+     * Adds a new account to the internal storage
+     *
+     * @param account account to be added
+     */
+    void addAccount(Account account);
+
+    /**
+     * Adds a new transaction to the internal storage
+     *
+     * @param transaction transaction to be added
+     */
+    void addTransaction(Transaction transaction);
 }

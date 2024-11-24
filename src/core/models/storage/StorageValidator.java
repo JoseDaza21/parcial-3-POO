@@ -4,6 +4,7 @@
  */
 package core.models.storage;
 
+import core.models.Account;
 import core.models.User;
 import core.models.interfaces.IStorageValidator;
 
@@ -14,10 +15,19 @@ import core.models.interfaces.IStorageValidator;
 public class StorageValidator implements IStorageValidator {
 
     @Override
-    public void uniqueUserID(int id, Storage storage) {
+    public void uniqueID(int id, Storage storage) {
         for (User u : storage.getUsers()) {
             if (u.getId() == id) {
                 throw new IllegalArgumentException("A person with ID" + id + " already exists");
+            }
+        }
+    }
+    
+    @Override
+    public void uniqueID(String id, Storage storage) {
+        for (Account a : storage.getAccounts()) {
+            if (a.getId().equals(id)) {
+                throw new IllegalArgumentException("An account with ID" + id + " already exists");
             }
         }
     }

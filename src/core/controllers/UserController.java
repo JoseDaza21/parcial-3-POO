@@ -22,6 +22,7 @@ public class UserController implements IUserController {
 
     /**
      * Instances the user controller
+     *
      * @param userRepository repository for user data
      */
     public UserController(IUserRepository userRepository) {
@@ -32,6 +33,11 @@ public class UserController implements IUserController {
     public List<User> getUsers() {
         return this.userRepository.getUsers();
     }
+    
+    @Override
+    public User getUser(int user_id) {
+        return this.userRepository.getUser(user_id);
+    }
 
     @Override
     public Response createUser(String id, String firstname, String lastname, String age) {
@@ -40,6 +46,7 @@ public class UserController implements IUserController {
         try {
             try {
                 user = Validator.validateUserInput(id, firstname, lastname, age);
+
                 this.userRepository.addUser(user);
             } catch (IllegalArgumentException e) {
                 return new Response(e.getMessage(), Status.BAD_REQUEST);

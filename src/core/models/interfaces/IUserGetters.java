@@ -5,16 +5,19 @@
 package core.models.interfaces;
 
 import core.models.User;
+import java.util.List;
 
 /**
  *
  * @author jose
  */
-public interface IUserRepository extends IUserGetters {
-
+public interface IUserGetters {
+    
     /**
-     * Add a new user to the storage
-     * @param user user information
+     * Getter for the users list property
+     * @return users list
      */
-    void addUser(User user);
+    List<User> getUsers();
+    
+    User getUser(int user_id);
 }

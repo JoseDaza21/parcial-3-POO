@@ -4,39 +4,35 @@
  */
 package core.models.repositories;
 
-import core.models.interfaces.IUserRepository;
-import core.models.User;
+import core.models.Transaction;
 import core.models.interfaces.IStorage;
+import core.models.interfaces.ITransactionRepository;
 import java.util.List;
 
 /**
  *
  * @author jose
  */
-public class UserRepository implements IUserRepository {
+public class TransactionRepository implements ITransactionRepository {
 
     private final IStorage storage;
 
     /**
      * Repository instance for handling storage
+     *
      * @param storage storage instance
      */
-    public UserRepository(IStorage storage) {
+    public TransactionRepository(IStorage storage) {
         this.storage = storage;
     }
 
     @Override
-    public void addUser(User user) {
-        this.storage.addUser(user);
+    public void addTransaction(Transaction transaction) {
+        this.storage.addTransaction(transaction);
     }
 
     @Override
-    public List<User> getUsers() {
-        return this.storage.getUsers();
-    }
-    
-    @Override
-    public User getUser(int user_id) {
-        return this.storage.getUser(user_id);
+    public List<Transaction> getTransactions() {
+        return this.storage.getTransactions();
     }
 }

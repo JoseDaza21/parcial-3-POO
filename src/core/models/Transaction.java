@@ -5,19 +5,19 @@
 package core.models;
 
 import core.models.utils.TransactionType;
-import core.models.Account;
+import core.models.interfaces.ITransaction;
 
 /**
  *
  * @author edangulo
  */
-public class Transaction {
-    
-    private TransactionType type;
-    private Account sourceAccount;
-    private Account destinationAccount;
-    private double amount;
-    
+public class Transaction implements ITransaction {
+
+    private final TransactionType type;
+    private final Account sourceAccount;
+    private final Account destinationAccount;
+    private final double amount;
+
     public Transaction(TransactionType type, Account sourceAccount, Account destinationAccount, double amount) {
         this.type = type;
         this.sourceAccount = sourceAccount;
@@ -25,20 +25,24 @@ public class Transaction {
         this.amount = amount;
     }
 
+    @Override
     public TransactionType getType() {
         return type;
     }
 
+    @Override
     public Account getSourceAccount() {
         return sourceAccount;
     }
 
+    @Override
     public Account getDestinationAccount() {
         return destinationAccount;
     }
 
+    @Override
     public double getAmount() {
         return amount;
     }
-    
+
 }

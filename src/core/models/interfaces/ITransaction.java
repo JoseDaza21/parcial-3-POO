@@ -4,18 +4,20 @@
  */
 package core.models.interfaces;
 
-import core.models.User;
-import java.util.List;
+import core.models.Account;
+import core.models.utils.TransactionType;
 
 /**
  *
  * @author jose
  */
-public interface IGetters {
-    
-    /**
-     * Getter for the users list property
-     * @return users list
-     */
-    List<User> getUsers();
+public interface ITransaction {
+
+    TransactionType getType();
+
+    Account getSourceAccount();
+
+    Account getDestinationAccount();
+
+    double getAmount();
 }

@@ -4,12 +4,14 @@
  */
 package core.models;
 
+import core.models.interfaces.IAccount;
+
 /**
  *
  * @author edangulo
  */
-public class Account {
-    
+public class Account implements IAccount {
+
     private final String id;
     private final User owner;
     private double balance;
@@ -18,34 +20,39 @@ public class Account {
         this.id = id;
         this.owner = owner;
         this.balance = 0;
-        
+
         this.owner.addAccount(this);
     }
-    
+
     public Account(String id, User owner, double balance) {
         this.id = id;
         this.owner = owner;
         this.balance = balance;
-        
+
         this.owner.addAccount(this);
     }
-    
+
+    @Override
     public String getId() {
         return id;
     }
 
+    @Override
     public User getOwner() {
         return owner;
     }
 
+    @Override
     public double getBalance() {
         return balance;
     }
-    
+
+    @Override
     public void deposit(double amount) {
         this.balance += amount;
     }
-    
+
+    @Override
     public boolean withdraw(double amount) {
         if (amount > this.balance) {
             return false;
@@ -53,5 +60,5 @@ public class Account {
         this.balance -= amount;
         return true;
     }
-    
+
 }

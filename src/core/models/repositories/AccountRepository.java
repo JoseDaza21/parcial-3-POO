@@ -4,8 +4,8 @@
  */
 package core.models.repositories;
 
-import core.models.interfaces.IUserRepository;
-import core.models.User;
+import core.models.Account;
+import core.models.interfaces.IAccountRepository;
 import core.models.interfaces.IStorage;
 import java.util.List;
 
@@ -13,30 +13,31 @@ import java.util.List;
  *
  * @author jose
  */
-public class UserRepository implements IUserRepository {
+public class AccountRepository implements IAccountRepository {
 
     private final IStorage storage;
 
     /**
      * Repository instance for handling storage
+     *
      * @param storage storage instance
      */
-    public UserRepository(IStorage storage) {
+    public AccountRepository(IStorage storage) {
         this.storage = storage;
     }
 
     @Override
-    public void addUser(User user) {
-        this.storage.addUser(user);
+    public void addAccount(Account account) {
+        this.storage.addAccount(account);
     }
 
     @Override
-    public List<User> getUsers() {
-        return this.storage.getUsers();
+    public List<Account> getAccounts() {
+        return this.storage.getAccounts();
     }
-    
+
     @Override
-    public User getUser(int user_id) {
-        return this.storage.getUser(user_id);
+    public Account getAccount(String account_id) {
+        return this.storage.getAccount(account_id);
     }
 }

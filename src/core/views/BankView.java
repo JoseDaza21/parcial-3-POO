@@ -4,6 +4,8 @@
  */
 package core.views;
 
+import core.controllers.interfaces.IAccountController;
+import core.controllers.interfaces.ITransactionController;
 import core.models.Account;
 import core.models.Transaction;
 import core.models.utils.TransactionType;
@@ -11,7 +13,6 @@ import core.models.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
-import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import core.controllers.interfaces.IUserController;
@@ -26,21 +27,25 @@ public class BankView extends javax.swing.JFrame {
     //TODO: delete these lists
     private final List<Account> accounts;
     private final List<Transaction> transactions;
-    private final List<User> users;
     private final IUserController userController;
+    private final IAccountController accountController;
+    private final ITransactionController transactionController;
 
     /**
      * Creates new form BankFrame
+     *
      * @param userController controller for user actions
+     * @param accountController controller for accounts actions
      */
-    public BankView(IUserController userController) {
+    public BankView(IUserController userController, IAccountController accountController, ITransactionController transactionController) {
         initComponents();
         this.accounts = new ArrayList<>();
         this.transactions = new ArrayList<>();
-        this.users = new ArrayList<>();
 
         // controllers
         this.userController = userController;
+        this.accountController = accountController;
+        this.transactionController = transactionController;
     }
 
     /**
@@ -557,44 +562,40 @@ public class BankView extends javax.swing.JFrame {
     }//GEN-LAST:event_RegisterUserButtonActionPerformed
 
     private void CreateAccountButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateAccountButtonActionPerformed
-        // TODO add your handling code here:
-        try {
-            int userId = Integer.parseInt(UserIDTextField.getText());
-            double initialBalance = Double.parseDouble(InitialBalanceTextField.getText());
 
-            User selectedUser = null;
-            for (User user : this.users) {
-                if (user.getId() == userId && selectedUser == null) {
-                    selectedUser = user;
-                }
-            }
+        String user_id = UserIDTextField.getText();
+        String initial_balance = InitialBalanceTextField.getText();
 
-            if (selectedUser != null) {
-                Random random = new Random();
-                int first = random.nextInt(1000);
-                int second = random.nextInt(1000000);
-                int third = random.nextInt(100);
+        Response response = this.accountController.createAccount(user_id, initial_balance);
 
-                String accountId = String.format("%03d", first) + "-" + String.format("%06d", second) + "-" + String.format("%02d", third);
+        // Show message according to the response
+        if (response.getStatus() >= 500) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.ERROR_MESSAGE);
+        } else if (response.getStatus() >= 400) {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Error " + response.getStatus(), JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, response.getMessage(), "Response Message", JOptionPane.INFORMATION_MESSAGE);
 
-                this.accounts.add(new Account(accountId, selectedUser, initialBalance));
-
-                UserIDTextField.setText("");
-                InitialBalanceTextField.setText("");
-            }
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "Error", "Error", JOptionPane.ERROR_MESSAGE);
+            // emtpy fields
+            UserIDTextField.setText("");
+            InitialBalanceTextField.setText("");
         }
     }//GEN-LAST:event_CreateAccountButtonActionPerformed
 
     private void ExecuteTransactionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ExecuteTransactionButtonActionPerformed
         // TODO add your handling code here:
+        String type = TypeComboBox.getItemAt(TypeComboBox.getSelectedIndex());
+        String source_account_id = SourceAccountTextField.getText();
+        String destination_account_id = DestinationAccountTextField.getText();
+        String amount = AmountTextField.getText();
+        
+        this.transactionController.createTransaction(type, source_account_id, destination_account_id, amount);
+        
         try {
-            String type = TypeComboBox.getItemAt(TypeComboBox.getSelectedIndex());
+            //String type = TypeComboBox.getItemAt(TypeComboBox.getSelectedIndex());
             switch (type) {
                 case "Deposit": {
-                    String destinationAccountId = DestinationAccountTextField.getText();
-                    double amount = Double.parseDouble(AmountTextField.getText());
+                    
 
                     Account destinationAccount = null;
                     for (Account account : this.accounts) {
@@ -614,7 +615,7 @@ public class BankView extends javax.swing.JFrame {
                     break;
                 }
                 case "Withdraw": {
-                    String sourceAccountId = SourceAccountTextField.getText();
+                    
                     double amount = Double.parseDouble(AmountTextField.getText());
 
                     Account sourceAccount = null;
@@ -677,9 +678,10 @@ public class BankView extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) UsersTable.getModel();
         model.setRowCount(0);
 
-        this.users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
+        List<User> users = userController.getUsers();
+        users.sort((obj1, obj2) -> (obj1.getId() - obj2.getId()));
 
-        for (User user : this.users) {
+        for (User user : users) {
             model.addRow(new Object[]{user.getId(), user.getFirstname() + " " + user.getLastname(), user.getAge(), user.getNumAccounts()});
         }
     }//GEN-LAST:event_RefreshUsersButtonActionPerformed
@@ -689,9 +691,10 @@ public class BankView extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) AccountsTable.getModel();
         model.setRowCount(0);
 
-        this.accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
+        List<Account> accounts = accountController.getAccounts();
+        accounts.sort((obj1, obj2) -> (obj1.getId().compareTo(obj2.getId())));
 
-        for (Account account : this.accounts) {
+        for (Account account : accounts) {
             model.addRow(new Object[]{account.getId(), account.getOwner().getId(), account.getBalance()});
         }
     }//GEN-LAST:event_RefreshAccountsButtonActionPerformed

@@ -4,17 +4,18 @@
  */
 package core.models.interfaces;
 
-import core.models.User;
+import core.models.Transaction;
 
 /**
  *
  * @author jose
  */
-public interface IUserRepository extends IUserGetters {
+public interface ITransactionRepository extends ITransactionGetters {
 
     /**
-     * Add a new user to the storage
-     * @param user user information
+     * Add a new transaction to the storage
+     *
+     * @param transaction transaction information
      */
-    void addUser(User user);
+    void addTransaction(Transaction transaction);
 }

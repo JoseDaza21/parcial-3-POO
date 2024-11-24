@@ -4,17 +4,17 @@
  */
 package core.models.interfaces;
 
-import core.models.User;
+import core.models.Transaction;
+import java.util.List;
 
 /**
  *
  * @author jose
  */
-public interface IUserRepository extends IUserGetters {
-
-    /**
-     * Add a new user to the storage
-     * @param user user information
+public interface ITransactionGetters {
+     /**
+     * Getter for the users list property
+     * @return users list
      */
-    void addUser(User user);
+    List<Transaction> getTransactions();
 }

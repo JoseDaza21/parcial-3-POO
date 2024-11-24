@@ -4,17 +4,18 @@
  */
 package core.models.interfaces;
 
-import core.models.User;
+import core.models.Account;
 
 /**
  *
  * @author jose
  */
-public interface IUserRepository extends IUserGetters {
+public interface IAccountRepository extends IAccountGetters {
 
     /**
-     * Add a new user to the storage
-     * @param user user information
+     * Add a new account to the storage
+     *
+     * @param account account information
      */
-    void addUser(User user);
+    void addAccount(Account account);
 }

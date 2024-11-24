@@ -10,11 +10,15 @@ import core.models.User;
  *
  * @author jose
  */
-public interface IUserRepository extends IUserGetters {
+public interface IAccount {
 
-    /**
-     * Add a new user to the storage
-     * @param user user information
-     */
-    void addUser(User user);
+    String getId();
+
+    User getOwner();
+
+    double getBalance();
+
+    void deposit(double amount);
+
+    boolean withdraw(double amount);
 }
